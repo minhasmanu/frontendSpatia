@@ -3,10 +3,12 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import ViewerPage from "./pages/ViewerPage";
 import Navbar from "./components/Navbar";
+import Loader from "./components/Loader";
 
 function App() {
   return (
     <BrowserRouter>
+      <Loader />
       <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
