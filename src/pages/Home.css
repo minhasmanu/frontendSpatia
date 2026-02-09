@@ -1,0 +1,107 @@
+/* Design system variables */
+:root {
+  --color-bg: #050107;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.75);
+  --color-accent: #ed23cf;
+  --color-accent-muted: rgba(237, 35, 207, 0.6);
+  --font-display: 'KaliebLuxuryDemo', serif;
+  --font-body: Arial, Helvetica, sans-serif;
+  --radius-pill: 56px;
+  --radius-button: 28px;
+  --space-section: clamp(80px, 15vw, 160px);
+  --space-block: clamp(24px, 4vw, 48px);
+}
+
+.hero {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-section) 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 20%,
+    rgba(160, 68, 176, 0.12) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+  color: var(--color-text);
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.heroTitleLine2 {
+  display: block;
+  margin-top: 0.15em;
+  background: linear-gradient(90deg, #e0c7e3, var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.5;
+  margin: var(--space-block) 0 0;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroCta {
+  margin-top: var(--space-block);
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 16px 40px;
+  font-size: 1.125rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-accent-muted);
+  box-shadow: 0 0 24px rgba(237, 35, 207, 0.2);
+}
+
+.ctaButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}

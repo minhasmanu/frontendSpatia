@@ -1,54 +1,119 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css";
 
-export default function Dashboard(){
-  const [file,setFile] = useState(null);
-  const [loading,setLoading] = useState(false);
-  const nav = useNavigate();
+export default function Dashboard() {
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const upload = async ()=>{
-    if(!file){
-      alert("Select image first");
+  const upload = async () => {
+    if (!file) {
+      alert("Select a floorplan image first.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image",file);
+    formData.append("image", file);
 
-    try{
+    try {
       setLoading(true);
 
       const res = await axios.post(
         "http://51.20.208.173:8081/",
         formData,
-        { responseType:"blob" }
+        { responseType: "blob" }
       );
 
       const url = window.URL.createObjectURL(res.data);
-      localStorage.setItem("modelURL",url);
+      localStorage.setItem("modelURL", url);
 
-      nav("/viewer");
-
-    }catch(err){
+      navigate("/viewer");
+    } catch (err) {
       alert("Upload failed");
       console.log(err);
-    }finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
-  return(
-    <div style={{textAlign:"center",marginTop:"100px"}}>
-      <h2>Upload Floorplan</h2>
+  const handleFileChange = (event) => {
+    const selected = event.target.files && event.target.files[0];
+    if (selected) {
+      setFile(selected);
+    }
+  };
 
-      <input type="file" onChange={(e)=>setFile(e.target.files[0])}/>
+  return (
+    <div className="dashboardPage">
+      <section className="dashboardMain">
+        <header className="dashboardHeader">
+          <h1 className="dashboardTitle">Upload floorplan</h1>
+          <p className="dashboardSubtitle">
+            Transform your 2D floorplan into an interactive 3D building in
+            moments.
+          </p>
+        </header>
 
-      <br/><br/>
+        <div className="uploadCard">
+          <label className="uploadLabel">
+            <span className="uploadLabelTitle">Drop your floorplan here</span>
+            <span className="uploadLabelHint">
+              Or click to browse image files from your device.
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hiddenFileInput"
+            />
+          </label>
 
-      <button onClick={upload}>Generate 3D</button>
+          <div className="fileInfo">
+            {file ? `Selected: ${file.name}` : "No file selected yet."}
+          </div>
 
-      {loading && <h3>Generating 3D Model...</h3>}
+          <div className="primaryActions">
+            <button
+              type="button"
+              className="primaryButton"
+              onClick={upload}
+              disabled={loading}
+            >
+              {loading ? "Generating 3D model..." : "Generate 3D model"}
+            </button>
+          </div>
+
+          <p className="secondaryText">
+            Supported: common image formats (PNG, JPG and similar).
+          </p>
+
+          {loading && (
+            <div className="loadingMessage">
+              This may take a moment while we process your floorplan.
+            </div>
+          )}
+        </div>
+      </section>
+
+      <aside className="dashboardSide">
+        <div>
+          <h2 className="sideSectionTitle">Tips for best results</h2>
+          <p className="sideSectionText">
+            Use clear, high-resolution floorplans with visible walls and room
+            boundaries. Avoid noisy backgrounds where possible.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="sideSectionTitle">What happens next?</h2>
+          <p className="sideSectionText">
+            We analyze your layout, generate a 3D model, and open it in the
+            viewer so you can inspect, orbit and export your building.
+          </p>
+        </div>
+      </aside>
     </div>
-  )
+  );
 }

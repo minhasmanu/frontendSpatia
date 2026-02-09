@@ -1,0 +1,215 @@
+/* Viewer page layout and styling */
+
+:root {
+  --viewer-surface: rgba(255, 255, 255, 0.03);
+  --viewer-surface-strong: rgba(255, 255, 255, 0.06);
+  --viewer-border: rgba(255, 255, 255, 0.15);
+  --viewer-text-muted: rgba(255, 255, 255, 0.7);
+  --viewer-accent: #ed23cf;
+  --viewer-radius-lg: 32px;
+  --viewer-radius-md: 20px;
+  --viewer-radius-pill: 999px;
+}
+
+.viewerPage {
+  min-height: calc(100vh - 80px);
+  padding: 32px 40px 40px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.viewerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.viewerBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.viewerBrandLogo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.viewerBrandName {
+  font-family: 'KaliebLuxuryDemo', serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+}
+
+.viewerHeaderText h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.viewerHeaderText p {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: var(--viewer-text-muted);
+}
+
+.viewerBackButton {
+  padding: 10px 22px;
+  border-radius: var(--viewer-radius-pill);
+  border: 1px solid var(--viewer-border);
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.viewerBackButton:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.viewerLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.9fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.viewerCanvasSection {
+  background: radial-gradient(
+      ellipse at top left,
+      rgba(160, 68, 176, 0.25),
+      transparent 55%
+    ),
+    var(--viewer-surface);
+  border-radius: var(--viewer-radius-lg);
+  border: 1px solid var(--viewer-border);
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.viewerCanvasHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--viewer-text-muted);
+}
+
+.viewerCanvas {
+  width: 100%;
+  height: 520px;
+  border-radius: var(--viewer-radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #050107;
+}
+
+.viewerSidebar {
+  background: var(--viewer-surface);
+  border-radius: var(--viewer-radius-lg);
+  border: 1px solid var(--viewer-border);
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.viewerSidebarTitle {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.viewerSidebarSubtitle {
+  margin: 2px 0 0;
+  font-size: 0.88rem;
+  color: var(--viewer-text-muted);
+}
+
+.viewerButtonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.viewerButtonRow {
+  display: flex;
+  gap: 10px;
+}
+
+.viewerButton {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--viewer-border);
+  background: var(--viewer-surface-strong);
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.viewerButton.primary {
+  background: linear-gradient(135deg, #a044b0, #ed23cf);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.viewerButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.viewerButton.primary:hover {
+  background: linear-gradient(135deg, #b85fd0, #ff3ce4);
+}
+
+.viewerMeta {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--viewer-text-muted);
+}
+
+@media (max-width: 960px) {
+  .viewerPage {
+    padding: 24px 20px 32px;
+  }
+
+  .viewerLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .viewerCanvas {
+    height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .viewerHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .viewerBackButton {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .viewerPage {
+    padding-inline: 16px;
+  }
+}
+
