@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import ViewerPage from "./pages/ViewerPage";
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
-
+import './index.css';
 function App() {
   return (
     <BrowserRouter>

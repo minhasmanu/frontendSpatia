@@ -1,21 +1,18 @@
 import { Link } from "react-router-dom";
+import styles from './Navbar.module.css';
+import logo from '../assets/spatia-Logo-cropped.svg';
 
 export default function Navbar(){
   return(
-    <div style={{
-      width:"100%",
-      padding:"15px",
-      background:"#0f172a",
-      color:"white",
-      display:"flex",
-      justifyContent:"space-between",
-      alignItems:"center"
-    }}>
-      <h2>Floorplan3D AI</h2>
+    <div className={styles.container}>
+      <div className={styles.brand}>
+        <img src={logo} alt="Spatia Logo" className={styles.logo} />
+        <h2>SPATIA</h2>
+      </div>
 
-      <div style={{display:"flex",gap:"20px"}}>
-        <Link to="/" style={{color:"white"}}>Home</Link>
-        <Link to="/dashboard" style={{color:"white"}}>Dashboard</Link>
+      <div className={styles.links}>
+        <Link to="/" className={styles.link}>Home</Link>
+        <Link to="/dashboard" className={styles.link}>Dashboard</Link>
       </div>
     </div>
   )

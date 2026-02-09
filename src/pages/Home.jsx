@@ -5,7 +5,8 @@ export default function Home(){
 
   return(
     <div style={{textAlign:"center",marginTop:"100px"}}>
-      <h1>AI Floorplan to 3D Generator</h1>
+      <h1>Beyond Blueprints: Integrating Futuristic Concepts
+      Push the boundaries of design with advanced 3D modeling</h1>
       <p>Upload floorplan and generate 3D building instantly</p>
 
       <button onClick={()=>nav("/dashboard")}

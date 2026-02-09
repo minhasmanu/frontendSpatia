@@ -1,0 +1,52 @@
+.container {
+  width: 90%;
+  margin: 20px auto 0;
+  padding: 15px;
+  border-radius: 56px;
+  border: 0.5px solid #FFF;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@font-face {
+  font-family: 'KaliebLuxuryDemo';
+  src: url('../assets/fonts/KaliebLuxuryDemo-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.container h2 {
+  font-family: 'KaliebLuxuryDemo', serif;
+  margin: 0;
+  color: #FFF;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.links {
+  display: flex;
+  gap: 20px;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+}
+
+
