@@ -6,6 +6,11 @@ export default function Home() {
 
   return (
     <section className="hero">
+      <div className="authButtons">
+        <button className="authButton" onClick={() => navigate("/login")}>Log in</button>
+        <button className="authButton primary" onClick={() => navigate("/signup")}>Sign up</button>
+      </div>
+
       <div className="heroContent">
         <h1 className="heroTitle">
           Beyond Blueprints: Integrating Futuristic Concepts
@@ -20,7 +25,7 @@ export default function Home() {
           <button
             type="button"
             className="ctaButton"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/login")}
           >
             Start Now
           </button>

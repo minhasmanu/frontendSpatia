@@ -12,7 +12,6 @@ export default function Navbar(){
 
       <div className={styles.links}>
         <Link to="/" className={styles.link}>Home</Link>
-        <Link to="/dashboard" className={styles.link}>Dashboard</Link>
       </div>
     </div>
   )

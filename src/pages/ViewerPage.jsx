@@ -15,6 +15,13 @@ export default function ViewerPage() {
   let autoRotate = true;
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color("#050107");
 
