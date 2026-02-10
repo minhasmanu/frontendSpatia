@@ -1,0 +1,112 @@
+:root {
+  --fp-toolbar-bg: #0f172a;
+  --fp-toolbar-border: rgba(148, 163, 184, 0.4);
+  --fp-toolbar-text: #e5e7eb;
+  --fp-accent: #6366f1;
+  --fp-accent-soft: rgba(99, 102, 241, 0.15);
+  --fp-danger: #ef4444;
+}
+
+.fpToolbar {
+  width: 220px;
+  padding: 16px 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--fp-toolbar-border);
+  background: radial-gradient(circle at top left, #1f2937, #020617);
+  color: var(--fp-toolbar-text);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.5);
+}
+
+.fpToolbarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fpToolbarSection--bottom {
+  margin-top: auto;
+  gap: 8px;
+}
+
+.fpToolbarTitle {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.fpToolbarButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fpToolbarButtons--compact {
+  align-items: center;
+}
+
+.fpToolbarButton {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--fp-toolbar-text);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.fpToolbarButton:hover {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: rgba(156, 163, 175, 0.9);
+  transform: translateY(-1px);
+}
+
+.fpToolbarButton--active {
+  background: var(--fp-accent-soft);
+  border-color: var(--fp-accent);
+  color: #e0e7ff;
+}
+
+.fpToolbarButton--primary {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-color: transparent;
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+.fpToolbarButton--primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+.fpToolbarButton--danger {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.85);
+  color: #fecaca;
+}
+
+.fpToolbarButton--danger:hover {
+  background: rgba(248, 113, 113, 0.18);
+}
+
+.fpToolbarButton--ghost {
+  background: transparent;
+  border-style: dashed;
+}
+
+.fpToolbarZoomLabel {
+  min-width: 52px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.fpToolbarHint {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+

@@ -21,6 +21,11 @@ export default function Dashboard() {
       
       if (floorplanImage) {
         try {
+          // Extract mime type from data URL (e.g., "data:image/jpeg;base64,..." -> "image/jpeg")
+          const mimeMatch = floorplanImage.match(/^data:([^;]+)/);
+          const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+          const fileName = mimeType === 'image/jpeg' ? 'floorplan.jpg' : 'floorplan.png';
+
           // Convert data URL to blob
           const dataUrlParts = floorplanImage.split(',');
           const bstr = atob(dataUrlParts[1]);
@@ -29,8 +34,8 @@ export default function Dashboard() {
           for (let i = 0; i < n; i++) {
             u8arr[i] = bstr.charCodeAt(i);
           }
-          const blob = new Blob([u8arr], { type: 'image/png' });
-          const file = new File([blob], 'floorplan.png', { type: 'image/png' });
+          const blob = new Blob([u8arr], { type: mimeType });
+          const file = new File([blob], fileName, { type: mimeType });
           
           setFile(file);
 
@@ -67,10 +72,7 @@ export default function Dashboard() {
         "http://51.20.208.173:8081/",
         formData,
         { 
-          responseType: "blob",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          }
+          responseType: "blob"
         }
       );
 

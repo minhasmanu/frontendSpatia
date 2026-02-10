@@ -1,0 +1,113 @@
+:root {
+  --fp-sidebar-bg: rgba(15, 23, 42, 0.86);
+  --fp-sidebar-border: rgba(148, 163, 184, 0.4);
+  --fp-sidebar-text: #e5e7eb;
+}
+
+.fpSidebar {
+  width: 260px;
+  padding: 18px 18px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--fp-sidebar-border);
+  background: radial-gradient(circle at top, #111827, #020617);
+  color: var(--fp-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.5);
+}
+
+.fpSidebarHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fpSidebarTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.fpSidebarSubtitle {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.fpSidebarSection {
+  border-top: 1px solid rgba(31, 41, 55, 0.8);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fpSidebarSectionTitle {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+.fpSidebarStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.fpSidebarStat {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fpSidebarStatLabel {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+.fpSidebarStatValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.fpSidebarSelection {
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.fpSidebarHelp {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+.fpSidebarProperties {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fpSidebarPropRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+}
+
+.fpSidebarPropLabel {
+  color: #9ca3af;
+}
+
+.fpSidebarPropValue {
+  font-weight: 500;
+  color: #e5e7eb;
+}
+

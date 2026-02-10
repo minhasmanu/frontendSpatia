@@ -1,0 +1,16 @@
+:root {
+  --fp-bg: #f5f7fb;
+  --fp-border: #d4d8e3;
+}
+
+.floorplanCanvasContainer {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 480px;
+  background: var(--fp-bg);
+  border-radius: 12px;
+  border: 1px solid var(--fp-border);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+

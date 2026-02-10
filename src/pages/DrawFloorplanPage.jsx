@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DrawFloorplan from '../components/DrawFloorplan';
 import './DrawFloorplanPage.css';
@@ -13,78 +13,49 @@ export default function DrawFloorplanPage() {
     }
   }, [navigate]);
 
-  const handleGenerateNow = (canvas, lines) => {
-    if (!canvas) return;
+  const handleGenerateNow = async ({ stage }) => {
+    if (!stage) return;
 
-    // Create a clean canvas for the final image (no grid, only walls)
-    const cleanCanvas = document.createElement('canvas');
-    cleanCanvas.width = canvas.width;
-    cleanCanvas.height = canvas.height;
-    const cleanCtx = cleanCanvas.getContext('2d');
+    try {
+      // hide grid lines during export so the white background rect remains
+      const gridLines = stage.findOne('.gridLines');
+      const prevVisible = gridLines ? gridLines.visible() : null;
+      if (gridLines) gridLines.visible(false);
 
-    // Fill with white background
-    cleanCtx.fillStyle = '#FFFFFF';
-    cleanCtx.fillRect(0, 0, cleanCanvas.width, cleanCanvas.height);
+      const dataUrl = stage.toDataURL({ mimeType: 'image/jpeg', pixelRatio: 2 });
 
-    // Draw only the wall lines in black with sharp, thick strokes
-    cleanCtx.strokeStyle = '#000000';
-    cleanCtx.lineWidth = 10; // Thick lines for clarity
-    cleanCtx.lineJoin = 'miter';
-    cleanCtx.lineCap = 'square';
+      // restore grid lines visibility
+      if (gridLines && prevVisible !== null) gridLines.visible(prevVisible);
 
-    // Draw all the lines
-    lines.forEach((line) => {
-      cleanCtx.beginPath();
-      cleanCtx.moveTo(line.x1, line.y1);
-      cleanCtx.lineTo(line.x2, line.y2);
-      cleanCtx.stroke();
-    });
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
 
-    // Scale down for compression and convert to blob
-    const scaleFactor = 0.75; // Increased from 0.5 to keep better resolution
-    const compressedCanvas = document.createElement('canvas');
-    compressedCanvas.width = cleanCanvas.width * scaleFactor;
-    compressedCanvas.height = cleanCanvas.height * scaleFactor;
-    const compressCtx = compressedCanvas.getContext('2d');
+      const downloadUrl = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = downloadUrl;
+      downloadLink.download = 'floorplan.jpg';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(downloadUrl);
 
-    // Draw the clean canvas content scaled down
-    compressCtx.scale(scaleFactor, scaleFactor);
-    compressCtx.drawImage(cleanCanvas, 0, 0);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageDataUrl = e.target?.result;
+        if (!imageDataUrl) return;
 
-    // Convert to PNG for better quality with lines (PNG handles line art better than JPG)
-    compressedCanvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          alert("Failed to generate image. Please try again.");
-          return;
-        }
-
-        // Download the image
-        const downloadUrl = URL.createObjectURL(blob);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = downloadUrl;
-        downloadLink.download = 'floorplan.png';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(downloadUrl);
-
-        // Convert blob to data URL and store in localStorage
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const dataUrl = e.target.result;
-          localStorage.setItem('floorplanImage', dataUrl);
-          
-          // Navigate to dashboard with flag to auto-upload
-          navigate('/dashboard', { state: { autoUploadFloorplan: true } });
-        };
-        reader.onerror = () => {
-          alert("Failed to prepare image for upload. Please try again.");
-        };
-        reader.readAsDataURL(blob);
-      },
-      'image/png'
-    );
+        localStorage.setItem('floorplanImage', imageDataUrl);
+        navigate('/dashboard', { state: { autoUploadFloorplan: true } });
+      };
+      reader.onerror = () => {
+        alert('Failed to prepare image for upload. Please try again.');
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to generate floorplan image', error);
+      alert('Failed to generate image. Please try again.');
+    }
   };
 
   return (

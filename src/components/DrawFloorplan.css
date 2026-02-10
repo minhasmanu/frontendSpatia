@@ -1,94 +1,29 @@
 .drawFloorplanContainer {
   width: 100%;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.drawFloorplanShell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 20px;
+  align-items: stretch;
 }
 
-.toolbar {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.wallCount {
-  color: #333;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-}
-
-.toolbarButton {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
-
-.toolbarButton.clear {
-  background: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-.toolbarButton.clear:hover {
-  background: #e0e0e0;
-  border-color: #999;
-  transform: translateY(-2px);
-}
-
-.toolbarButton.generate {
-  background: linear-gradient(90deg, #ed23cf, #ff8ad6);
-  color: #fff;
-  font-weight: 700;
-}
-
-.toolbarButton.generate:hover {
-  background: linear-gradient(90deg, #d91bb8, #ff7fc2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(237, 35, 207, 0.3);
-}
-
-.canvasWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.drawingCanvas {
-  width: 100%;
-  height: 600px;
-  border: 1px solid #E0E0E0;
-  border-radius: 12px;
-  background: #FFFFFF;
-  cursor: crosshair;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.drawFloorplanContainer .fpToolbar,
+.drawFloorplanContainer .fpSidebar {
+  max-height: 640px;
 }
 
 @media (max-width: 768px) {
   .drawFloorplanContainer {
     padding: 12px;
-    gap: 16px;
   }
 
-  .toolbar {
-    gap: 8px;
-  }
-
-  .toolbarButton {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-  }
-
-  .drawingCanvas {
-    height: 400px;
+  .drawFloorplanShell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 }
