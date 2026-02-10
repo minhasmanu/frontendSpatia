@@ -1,0 +1,51 @@
+.drawFloorplanPage {
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawFloorplanMain {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.drawFloorplanHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.drawFloorplanTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 16px 0;
+}
+
+.drawFloorplanSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .drawFloorplanPage {
+    padding: 80px 12px 40px;
+  }
+
+  .drawFloorplanTitle {
+    font-size: 1.8rem;
+  }
+
+  .drawFloorplanSubtitle {
+    font-size: 1rem;
+  }
+
+  .drawFloorplanHeader {
+    margin-bottom: 30px;
+  }
+}

@@ -1,36 +1,77 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Dashboard.css";
 
 export default function Dashboard() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     if (!isLoggedIn) {
       navigate("/login");
     }
-  }, [navigate]);
 
-  const upload = async () => {
-    if (!file) {
+    // Check if there's a floorplan image from DrawFloorplanPage
+    if (location.state?.autoUploadFloorplan) {
+      const floorplanImage = localStorage.getItem("floorplanImage");
+      
+      if (floorplanImage) {
+        try {
+          // Convert data URL to blob
+          const dataUrlParts = floorplanImage.split(',');
+          const bstr = atob(dataUrlParts[1]);
+          const n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          for (let i = 0; i < n; i++) {
+            u8arr[i] = bstr.charCodeAt(i);
+          }
+          const blob = new Blob([u8arr], { type: 'image/png' });
+          const file = new File([blob], 'floorplan.png', { type: 'image/png' });
+          
+          setFile(file);
+
+          // Clear the stored image
+          localStorage.removeItem("floorplanImage");
+
+          // Auto-trigger upload
+          setTimeout(() => {
+            uploadFloorplan(file);
+          }, 200);
+        } catch (error) {
+          console.error("Error processing floorplan image:", error);
+          alert("Error processing floorplan image. Please try uploading a file manually.");
+          localStorage.removeItem("floorplanImage");
+        }
+      }
+    }
+  }, [navigate, location]);
+
+  const uploadFloorplan = async (fileToUpload) => {
+    if (!fileToUpload) {
       alert("Select a floorplan image first.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("image", fileToUpload);
 
     try {
       setLoading(true);
+      console.log("Uploading file:", fileToUpload.name, fileToUpload.size, "bytes");
 
       const res = await axios.post(
         "http://51.20.208.173:8081/",
         formData,
-        { responseType: "blob" }
+        { 
+          responseType: "blob",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        }
       );
 
       const url = window.URL.createObjectURL(res.data);
@@ -38,11 +79,33 @@ export default function Dashboard() {
 
       navigate("/viewer");
     } catch (err) {
-      alert("Upload failed");
-      console.log(err);
+      console.error("Upload error details:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        type: err.response?.type,
+        contentType: err.response?.headers?.['content-type'],
+        message: err.message,
+        fullError: err
+      });
+
+      // Try to read error response
+      if (err.response?.data instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          console.error("Response body:", reader.result);
+          alert("Upload failed: Backend Error (Check console for details)");
+        };
+        reader.readAsText(err.response.data);
+      } else {
+        alert("Upload failed: " + (err.response?.status || err.message || "Unknown error"));
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const upload = async () => {
+    uploadFloorplan(file);
   };
 
   const handleFileChange = (event) => {
@@ -89,6 +152,13 @@ export default function Dashboard() {
               disabled={loading}
             >
               {loading ? "Generating 3D model..." : "Generate 3D model"}
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              onClick={() => navigate("/draw-floorplan")}
+            >
+              Draw Plan
             </button>
           </div>
 
