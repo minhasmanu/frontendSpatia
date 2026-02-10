@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Montaga&display=swap');
+
+
+.aboutPage {
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+}
+
+.aboutContainer {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 1200px;
+  width: 100%;
+  align-items: flex-start;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.aboutLeft, .aboutRight {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.aboutImage {
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+
+.leftImage {
+  width: 75%;
+  max-width: 440px;
+  margin-left: 0;
+}
+
+.rightImage {
+  width: 100%;
+  max-width: 760px;
+  display: block;
+}
+
+.aboutParagraph {
+  margin-top: 1rem;
+  font-family: 'Montaga', serif;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  color: #f5f5f5;
+  max-width: 680px;
+}
+
+@media (max-width: 800px) {
+  .aboutContainer { gap: 1.5rem; }
+  .leftImage { width: 65%; max-width: 360px; }
+  .rightImage { max-width: 600px; }
+  .aboutParagraph { font-size: 1.1rem; max-width: 520px; }
+}
+
+@media (max-width:1000px) {
+  .aboutContainer { flex-direction: column; gap: 1.25rem; }
+  .rightImage, .leftImage { max-width: 100%; width: 100%; }
+  .aboutParagraph { max-width: 100%; font-size: 1.1rem; }
+}

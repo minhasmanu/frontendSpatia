@@ -1,7 +1,11 @@
 .container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 70%;
-  margin: 20px auto 0;
-  padding: 15px;
+  /* increase horizontal padding for left and right sides */
+  padding: 15px 40px;
   border-radius: 56px;
   border: 0.5px solid #FFF;
   background: rgba(255, 255, 255, 0.05);
@@ -9,6 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
 }
 
 @font-face {
@@ -26,6 +31,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  font-size: 1.5rem;
 }
 
 .brand {
@@ -41,12 +47,21 @@
 
 .links {
   display: flex;
-  gap: 20px;
+  gap: 50px;
 }
 
 .link {
   color: white;
   text-decoration: none;
+  font-size: 1.1rem;
+}
+
+/* Reduce horizontal padding on small screens */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px 16px;
+    width: 94%;
+  }
 }
 
 
