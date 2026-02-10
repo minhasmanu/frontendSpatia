@@ -15,6 +15,8 @@
   --space-block: clamp(24px, 4vw, 48px);
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montaga&display=swap');
+
 .hero {
   min-height: calc(100vh - 120px);
   display: flex;
@@ -66,7 +68,7 @@
 }
 
 .heroSubtitle {
-  font-family: var(--font-body);
+  font-family: 'Montaga', serif;
   color: var(--color-text-muted);
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.5;
@@ -104,38 +106,4 @@
 .ctaButton:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
-}
-
-/* Auth buttons (top-right of home) */
-.authButtons {
-  position: absolute;
-  top: 28px;
-  right: 28px;
-  display: flex;
-  gap: 12px;
-  z-index: 2;
-}
-
-.authButton {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid transparent;
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.08s ease;
-}
-
-.authButton:hover { background: rgba(255,255,255,0.03); transform: translateY(-1px); }
-
-.authButton.primary {
-  background: linear-gradient(90deg, var(--color-accent), #ff8ad6);
-  color: #0b0710;
-  padding: 10px 18px;
-}
-
-@media (max-width: 640px) {
-  .authButtons { top: 18px; right: 16px; gap: 8px; }
-  .authButton { padding: 8px 12px; font-size: 0.9rem; }
 }

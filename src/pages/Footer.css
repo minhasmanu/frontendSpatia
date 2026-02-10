@@ -1,0 +1,36 @@
+.footerPage {
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+}
+
+.footerContainer {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.footerImage {
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+@media (max-width: 1000px) {
+  .footerImage {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .footerPage {
+    padding: 2rem 1rem;
+  }
+
+  .footerImage {
+    max-width: 100%;
+  }
+}
