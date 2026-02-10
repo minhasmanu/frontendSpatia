@@ -69,7 +69,7 @@ export default function Dashboard() {
       console.log("Uploading file:", fileToUpload.name, fileToUpload.size, "bytes");
 
       const res = await axios.post(
-        "https://thank-mrna-width-cluster.trycloudflare.com/",
+        "http://51.20.208.173:8081/",
         formData,
         { 
           responseType: "blob"
