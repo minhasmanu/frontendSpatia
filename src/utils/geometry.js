@@ -4,7 +4,11 @@ export function distancePointToSegment(px, py, x1, y1, x2, y2) {
   if (dx === 0 && dy === 0) {
     const ddx = px - x1;
     const ddy = py - y1;
-    return Math.sqrt(ddx * ddx + ddy * ddy);
+    return {
+      distance: Math.sqrt(ddx * ddx + ddy * ddy),
+      t: 0,
+      point: { x: x1, y: y1 },
+    };
   }
 
   const t =
