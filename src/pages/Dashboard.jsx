@@ -69,7 +69,7 @@ export default function Dashboard() {
       console.log("Uploading file:", fileToUpload.name, fileToUpload.size, "bytes");
 
       const res = await axios.post(
-        "http://51.21.148.216:8081/",
+        "https://spatia.co.in/",
         formData,
         { 
           responseType: "blob"
