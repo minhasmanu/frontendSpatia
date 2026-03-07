@@ -1,0 +1,19 @@
+
+
+
+
+
+npm install -g ngrok
+Go to:
+https://dashboard.ngrok.com/signup
+Sign up with Google/GitHub.
+Open:
+https://dashboard.ngrok.com/get-started/your-authtoken
+
+3️⃣ Run the command in terminal
+
+Paste it in your terminal:
+
+ngrok config add-authtoken YOUR_TOKEN
+
+ngrok http 5173
