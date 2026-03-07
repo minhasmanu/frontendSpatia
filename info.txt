@@ -16,4 +16,9 @@ Paste it in your terminal:
 
 ngrok config add-authtoken YOUR_TOKEN
 
+on cmd
+npm run dev -- --host
+
+on bash
 ngrok http 5173
+
