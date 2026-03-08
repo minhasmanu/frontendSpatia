@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three-stdlib";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { VRButton } from "three/examples/jsm/webxr/VRButton";
+import { Sky } from "three/examples/jsm/objects/Sky";
 import "./VRViewer.css";
 
 export default function VRViewer({ modelURL }) {
@@ -15,7 +16,25 @@ export default function VRViewer({ modelURL }) {
     if (!mountRef.current) return;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#050107");
+    // slightly lighter base to avoid overly dark rooms in VR
+    
+
+    // realistic sky with sun
+    const sky = new Sky();
+    sky.scale.setScalar(10000);
+    scene.add(sky);
+
+    const skyUniforms = sky.material.uniforms;
+    skyUniforms["turbidity"].value = 10;
+    skyUniforms["rayleigh"].value = 2;
+    skyUniforms["mieCoefficient"].value = 0.005;
+    skyUniforms["mieDirectionalG"].value = 0.8;
+
+    const sun = new THREE.Vector3();
+    const phi = THREE.MathUtils.degToRad(60);
+    const theta = THREE.MathUtils.degToRad(180);
+    sun.setFromSphericalCoords(1, phi, theta);
+    sky.material.uniforms["sunPosition"].value.copy(sun);
 
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight;
@@ -25,9 +44,9 @@ export default function VRViewer({ modelURL }) {
     scene.add(rig);
     
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    camera.position.set(0, 0.8, 0); // eye height
+    camera.position.set(0, 0.4, 0); // eye height
     rig.add(camera);
-    rig.position.set(0, 0, 5);
+    rig.position.set(0, -1, 5);
     cameraRef.current = camera;
     // expose rig for VR movement
     cameraRef.current.rig = rig;
@@ -35,6 +54,12 @@ export default function VRViewer({ modelURL }) {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     renderer.xr.enabled = true;
+    // optimize pixel ratio for VR performance (especially Meta Quest)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    // tone mapping and lighting for realistic appearance
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
     mountRef.current.appendChild(renderer.domElement);
 
     // expose renderer so parent can open a session programmatically if needed
@@ -85,16 +110,38 @@ export default function VRViewer({ modelURL }) {
 
     rendererRef.current = renderer;
 
-    // basic lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 1.5);
+    // realistic indoor architectural lighting
+    // base ambient for overall brightness
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambient);
 
-    const dir = new THREE.DirectionalLight(0xffffff, 2);
-    dir.position.set(5, 10, 7);
-    scene.add(dir);
-
-    const hemi = new THREE.HemisphereLight(0x888877, 0x777788, 1);
+    // hemisphere light to simulate indirect sky/ground lighting
+    const hemi = new THREE.HemisphereLight(0xccccff, 0x444422, 1);
     scene.add(hemi);
+
+    // main directional (sun) light with shadows enabled
+    const mainDir = new THREE.DirectionalLight(0xffffff, 1.0);
+    mainDir.position.set(10, 20, 10);
+    mainDir.castShadow = true;
+    // configure shadow properties for softness and quality
+    mainDir.shadow.mapSize.width = 2048;
+    mainDir.shadow.mapSize.height = 2048;
+    mainDir.shadow.camera.near = 1;
+    mainDir.shadow.camera.far = 100;
+    mainDir.shadow.camera.left = -20;
+    mainDir.shadow.camera.right = 20;
+    mainDir.shadow.camera.top = 20;
+    mainDir.shadow.camera.bottom = -20;
+    scene.add(mainDir);
+
+    // secondary directional light as a soft fill
+    const fillDir = new THREE.DirectionalLight(0xffffff, 0.3);
+    fillDir.position.set(-10, 10, -10);
+    scene.add(fillDir);
+
+    // enable shadow map on renderer
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // orbit controls for desktop navigation
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -144,20 +191,27 @@ export default function VRViewer({ modelURL }) {
       loader.load(
         modelURL,
         (gltf) => {
+
           const model = gltf.scene;
+
           model.traverse((child) => {
             if (child.isMesh) {
               child.material.metalness = 0;
               child.material.roughness = 1;
+              child.castShadow = true;
+              child.receiveShadow = true;
             }
           });
 
           const box = new THREE.Box3().setFromObject(model);
           const center = box.getCenter(new THREE.Vector3());
+
           model.position.sub(center);
 
           scene.add(model);
+
           modelRef.current = model;
+
         },
         undefined,
         (err) => {
@@ -223,6 +277,48 @@ export default function VRViewer({ modelURL }) {
       });
     }
 
+    // collision detection for wall avoidance
+    const collisionRaycaster = new THREE.Raycaster();
+    
+    function checkCollision(position, movementDirection) {
+      if (!modelRef.current) return false;
+
+      const collisionBuffer = 0.3; // distance to keep from walls (in meters)
+      const raycastDirections = [
+        new THREE.Vector3(1, 0, 0),    // right
+        new THREE.Vector3(-1, 0, 0),   // left
+        new THREE.Vector3(0, 0, 1),    // forward
+        new THREE.Vector3(0, 0, -1),   // back
+        new THREE.Vector3(0.7, 0, 0.7),   // diagonal forward-right
+        new THREE.Vector3(-0.7, 0, 0.7),  // diagonal forward-left
+        new THREE.Vector3(0.7, 0, -0.7),  // diagonal back-right
+        new THREE.Vector3(-0.7, 0, -0.7), // diagonal back-left
+      ];
+
+      // add movement direction for direct wall detection
+      if (movementDirection) {
+        raycastDirections.push(movementDirection.clone());
+      }
+
+      // raise ray origin slightly above floor for better detection
+      const origin = position.clone();
+      origin.y += 1;
+
+      for (const direction of raycastDirections) {
+        collisionRaycaster.set(origin, direction.normalize());
+        const intersects = collisionRaycaster.intersectObject(modelRef.current, true);
+
+        if (intersects.length > 0) {
+          const distance = intersects[0].distance;
+          if (distance < collisionBuffer) {
+            return true; // collision detected
+          }
+        }
+      }
+
+      return false; // no collision
+    }
+
     function animate() {
       renderer.setAnimationLoop(() => {
         // Only rotate model on desktop (not in VR)
@@ -245,7 +341,7 @@ export default function VRViewer({ modelURL }) {
                 if (source.gamepad && source.handedness === "right") {
 
                     const axes = source.gamepad.axes || [];
-                    if (axes.length < 2) return;
+                    if (axes.length < 2) continue;
 
                     const strafeAxis = axes[2] ?? axes[0];
                     const forwardAxis = axes[3] ?? axes[1];
@@ -261,8 +357,16 @@ export default function VRViewer({ modelURL }) {
 
                         const sideways = new THREE.Vector3(-forward.z, 0, forward.x);
 
-                        rig.position.add(forward.multiplyScalar(-forwardAxis * moveSpeed));
-                        rig.position.add(sideways.multiplyScalar(strafeAxis * moveSpeed));
+                        // calculate new position with cloned vectors to avoid mutation
+                        const newPosition = rig.position.clone();
+                        const movementDir = forward.clone().multiplyScalar(-forwardAxis).add(sideways.clone().multiplyScalar(strafeAxis));
+                        newPosition.add(forward.clone().multiplyScalar(-forwardAxis * moveSpeed));
+                        newPosition.add(sideways.clone().multiplyScalar(strafeAxis * moveSpeed));
+
+                        // check for collision before moving, including movement direction
+                        if (!checkCollision(newPosition, movementDir)) {
+                          rig.position.copy(newPosition);
+                        }
 
                     }
 
