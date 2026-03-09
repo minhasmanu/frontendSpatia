@@ -8,24 +8,14 @@ export default function History() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    axios.get("http://10.103.111.25:8081/history")
+    axios.get("https://spatia.co.in/history")
       .then(res => setHistory(res.data))
       .catch(err => console.error(err));
   }, []);
 
   const deleteItem = async (image) => {
 
-    try {
-
-      await axios.delete(`http://10.103.111.25:8081/delete/${image}`);
-
-      setHistory(history.filter(item => item.image !== image));
-
-    } catch (error) {
-
-      console.error("Delete failed:", error);
-
-    }
+    
 
   };
 
@@ -45,7 +35,7 @@ export default function History() {
           />
 
           <model-viewer
-            src={`http://10.103.111.25:8081/outputs/${selected.model}`}
+            src={`https://spatia.co.in${selected.url}`}
             camera-controls
             auto-rotate
             className="modelViewer"
@@ -68,10 +58,7 @@ export default function History() {
 
           <div className="historyCard" key={index}>
 
-            <img
-              src={`http://10.103.111.25:8081/uploads/${item.image}`}
-              className="historyThumbnail"
-            />
+            
 
             <div className="historyActions">
 

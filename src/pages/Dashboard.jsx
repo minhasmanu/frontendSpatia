@@ -75,10 +75,9 @@ export default function Dashboard() {
 
       console.log("Backend response:", res.data);
 
-      const blob = res.data;
+      const modelFile = res.data.model;
 
-      // create temporary URL from blob
-      const modelURL = URL.createObjectURL(blob);
+      const modelURL = `https://spatia.co.in/outputs/${modelFile}`;
 
       localStorage.setItem("modelURL", modelURL);
 
