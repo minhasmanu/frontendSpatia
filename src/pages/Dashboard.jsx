@@ -69,14 +69,16 @@ export default function Dashboard() {
 
       const res = await axios.post(
         "https://spatia.co.in/",
-        formData
+        formData,
+
       );
 
       console.log("Backend response:", res.data);
 
-      const modelFile = res.data.model;
+      const blob = res.data;
 
-      const modelURL = `https://spatia.co.in/outputs/${modelFile}`;;
+      // create temporary URL from blob
+      const modelURL = URL.createObjectURL(blob);
 
       localStorage.setItem("modelURL", modelURL);
 
