@@ -69,10 +69,7 @@ export default function Dashboard() {
 
       const res = await axios.post(
         "https://spatia.co.in/",
-        formData,
-        { 
-          responseType: "blob"
-        }
+        formData
       );
 
       console.log("Backend response:", res.data);
