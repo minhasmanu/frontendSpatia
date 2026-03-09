@@ -79,7 +79,7 @@ export default function Dashboard() {
 
       const modelFile = res.data.model;
 
-      const modelURL = `http://10.103.111.25:8081/outputs/${modelFile}`;;
+      const modelURL = `https://spatia.co.in/outputs/${modelFile}`;;
 
       localStorage.setItem("modelURL", modelURL);
 
