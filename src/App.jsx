@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
+import History from "./pages/history";
 import DrawFloorplanPage from "./pages/DrawFloorplanPage";
 import ViewerPage from "./pages/ViewerPage";
 import Navbar from "./components/Navbar";
@@ -44,6 +45,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/draw-floorplan" element={<DrawFloorplanPage />} />
             <Route path="/viewer" element={<ViewerPage />} />
+            <Route path="/history" element={<History />} />
           </Routes>
         </BrowserRouter>
       </div>
