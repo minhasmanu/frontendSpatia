@@ -15,40 +15,38 @@ export default function Dashboard() {
       navigate("/login");
     }
 
-    // Check if there's a floorplan image from DrawFloorplanPage
     if (location.state?.autoUploadFloorplan) {
       const floorplanImage = localStorage.getItem("floorplanImage");
-      
+
       if (floorplanImage) {
         try {
-          // Extract mime type from data URL (e.g., "data:image/jpeg;base64,..." -> "image/jpeg")
           const mimeMatch = floorplanImage.match(/^data:([^;]+)/);
-          const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-          const fileName = mimeType === 'image/jpeg' ? 'floorplan.jpg' : 'floorplan.png';
+          const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+          const fileName =
+            mimeType === "image/jpeg" ? "floorplan.jpg" : "floorplan.png";
 
-          // Convert data URL to blob
-          const dataUrlParts = floorplanImage.split(',');
+          const dataUrlParts = floorplanImage.split(",");
           const bstr = atob(dataUrlParts[1]);
           const n = bstr.length;
           const u8arr = new Uint8Array(n);
+
           for (let i = 0; i < n; i++) {
             u8arr[i] = bstr.charCodeAt(i);
           }
+
           const blob = new Blob([u8arr], { type: mimeType });
           const file = new File([blob], fileName, { type: mimeType });
-          
+
           setFile(file);
 
-          // Clear the stored image
           localStorage.removeItem("floorplanImage");
 
-          // Auto-trigger upload
           setTimeout(() => {
             uploadFloorplan(file);
           }, 200);
         } catch (error) {
           console.error("Error processing floorplan image:", error);
-          alert("Error processing floorplan image. Please try uploading a file manually.");
+          alert("Error processing floorplan image.");
           localStorage.removeItem("floorplanImage");
         }
       }
@@ -66,47 +64,32 @@ export default function Dashboard() {
 
     try {
       setLoading(true);
-      console.log("Uploading file:", fileToUpload.name, fileToUpload.size, "bytes");
+
+      console.log("Uploading:", fileToUpload.name);
 
       const res = await axios.post(
-        "https://spatia.co.in/",
-        formData,
-        { 
-          responseType: "blob"
-        }
+        "http://10.103.111.25:8081/",
+        formData
       );
 
-      const url = window.URL.createObjectURL(res.data);
-      localStorage.setItem("modelURL", url);
+      console.log("Backend response:", res.data);
+
+      const modelFile = res.data.model;
+
+      const modelURL = `http://10.103.111.25:8081/outputs/${modelFile}`;;
+
+      localStorage.setItem("modelURL", modelURL);
 
       navigate("/viewer");
     } catch (err) {
-      console.error("Upload error details:", {
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        type: err.response?.type,
-        contentType: err.response?.headers?.['content-type'],
-        message: err.message,
-        fullError: err
-      });
-
-      // Try to read error response
-      if (err.response?.data instanceof Blob) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          console.error("Response body:", reader.result);
-          alert("Upload failed: Backend Error (Check console for details)");
-        };
-        reader.readAsText(err.response.data);
-      } else {
-        alert("Upload failed: " + (err.response?.status || err.message || "Unknown error"));
-      }
+      console.error("Upload error:", err);
+      alert("Upload failed: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const upload = async () => {
+  const upload = () => {
     uploadFloorplan(file);
   };
 
@@ -123,8 +106,7 @@ export default function Dashboard() {
         <header className="dashboardHeader">
           <h1 className="dashboardTitle">Upload floorplan</h1>
           <p className="dashboardSubtitle">
-            Transform your 2D floorplan into an interactive 3D building in
-            moments.
+            Transform your 2D floorplan into an interactive 3D building.
           </p>
         </header>
 
@@ -134,6 +116,7 @@ export default function Dashboard() {
             <span className="uploadLabelHint">
               Or click to browse image files from your device.
             </span>
+
             <input
               type="file"
               accept="image/*"
@@ -155,6 +138,7 @@ export default function Dashboard() {
             >
               {loading ? "Generating 3D model..." : "Generate 3D model"}
             </button>
+
             <button
               type="button"
               className="secondaryButton"
@@ -162,15 +146,22 @@ export default function Dashboard() {
             >
               Draw Plan
             </button>
+              <button
+                type="button"
+                className="secondaryButton"
+                onClick={() => navigate("/history")}
+          >
+                History
+             </button>
           </div>
 
           <p className="secondaryText">
-            Supported: common image formats (PNG, JPG and similar).
+            Supported: PNG, JPG and similar formats.
           </p>
 
           {loading && (
             <div className="loadingMessage">
-              This may take a moment while we process your floorplan.
+              Processing floorplan... please wait.
             </div>
           )}
         </div>
@@ -180,8 +171,7 @@ export default function Dashboard() {
         <div>
           <h2 className="sideSectionTitle">Tips for best results</h2>
           <p className="sideSectionText">
-            Use clear, high-resolution floorplans with visible walls and room
-            boundaries. Avoid noisy backgrounds where possible.
+            Use clear floorplans with visible walls and room boundaries.
           </p>
         </div>
 
@@ -189,7 +179,7 @@ export default function Dashboard() {
           <h2 className="sideSectionTitle">What happens next?</h2>
           <p className="sideSectionText">
             We analyze your layout, generate a 3D model, and open it in the
-            viewer so you can inspect, orbit and export your building.
+            viewer.
           </p>
         </div>
       </aside>
