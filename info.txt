@@ -22,3 +22,6 @@ npm run dev -- --host
 on bash
 ngrok http 5173
 
+https://spatia.co.in/
+
+5 api url change
